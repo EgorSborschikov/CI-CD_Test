@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          path: .
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -29,8 +31,6 @@ jobs:
 
       - name: Get dependencies
         run: flutter pub get
-        working-directory: ../todo_list_app
-
 
       - name: Run tests
         run: flutter test
