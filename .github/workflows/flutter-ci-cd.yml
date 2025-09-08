@@ -29,6 +29,8 @@ jobs:
 
       - name: Get dependencies
         run: flutter pub get
+        working-directory: ../todo_list_app
+
 
       - name: Run tests
         run: flutter test
