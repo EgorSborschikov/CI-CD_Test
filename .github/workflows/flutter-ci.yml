@@ -13,6 +13,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        path: 'todo_list_app'
 
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
@@ -20,6 +22,14 @@ jobs:
         flutter-version: '3.27.0'
         channel: 'stable'
 
+    - name: Change to project directory
+      run: |
+        echo "Current directory: $(pwd)"
+        echo "Directory contents:"
+        ls -la
+        # Перейдите в директорию с Flutter проектом
+        cd todo_list_app  
+        
     - name: Install dependencies
       run: flutter pub get
 
