@@ -2,72 +2,51 @@ name: Flutter CI/CD
 
 on:
   push:
-    branches: [main]
+    branches: [ main, master, develop ]
   pull_request:
-    branches: [main]
+    branches: [ main, master ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./todo_list_app
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        path: 'todo_list_app'
 
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.27.0'
+        flutter-version: '3.19.0'
         channel: 'stable'
 
     - name: Disable Flutter analytics
       run: flutter config --no-analytics
 
-    - name: Debug directory structure
+    - name: Run all Flutter commands in project directory
       run: |
         echo "Current directory: $(pwd)"
+        cd todo_list_app
+        echo "Now in: $(pwd)"
         echo "Directory contents:"
         ls -la
-        echo "Checking todo_list_app directory:"
-        ls -la todo_list_app/
-
-    - name: Change to project directory
-      run: cd todo_list_app
-
-    - name: Verify we are in correct directory
-      run: |
-        echo "Current directory: $(pwd)"
-        echo "Checking for pubspec.yaml:"
-        if [ -f "pubspec.yaml" ]; then
-          echo "✅ pubspec.yaml found!"
-        else
-          echo "❌ pubspec.yaml not found!"
-          echo "Current directory contents:"
-          ls -la
-          exit 1
-        fi
-
-    - name: Install dependencies
-      run: |
-        cd todo_list_app
+        
+        echo "Installing dependencies..."
         flutter pub get
-
-    - name: Run tests
-      run: |
-        cd todo_list_app
+        
+        echo "Running tests..."
         flutter test
-
-    - name: Check formatting
-      run: |
-        cd todo_list_app
+        
+        echo "Checking formatting..."
         flutter format --set-exit-if-changed .
-
-    - name: Analyze code
-      run: |
-        cd todo_list_app
+        
+        echo "Analyzing code..."
         flutter analyze
+        
+        echo "✅ All steps completed successfully!"
 
   build-android:
     runs-on: ubuntu-latest
